@@ -1,0 +1,46 @@
+'use client'
+
+import { Input } from "@/components/ui/input"
+import { Search } from "lucide-react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState, useCallback } from "react"
+import { useDebounce } from "@/hooks/use-debounce"
+
+export default function SearchBar() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [searchValue, setSearchValue] = useState(searchParams.get('q') || '')
+  const debouncedSearch = useDebounce(searchValue, 500)
+
+  const updateSearchQuery = useCallback((query: string) => {
+    const params = new URLSearchParams(window.location.search)
+    
+    if (query.trim()) {
+      params.set('q', query.trim())
+    } else {
+      params.delete('q')
+    }
+    
+    params.delete('page') 
+    params.delete('category') 
+    
+    router.push(`/?${params.toString()}`)
+  }, [router])
+
+  useEffect(() => {
+    updateSearchQuery(debouncedSearch)
+  }, [debouncedSearch, updateSearchQuery])
+
+  return (
+    <div className="relative w-full max-w-md">
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+      <Input
+        type="search"
+        placeholder="Поиск товаров..."
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        className="pl-10"
+      />
+    </div>
+  )
+}
