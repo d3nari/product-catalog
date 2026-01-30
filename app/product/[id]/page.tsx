@@ -7,6 +7,8 @@ import { ArrowLeft, Star, Package, Shield, Truck } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import ProductBackButton from '@/components/ProductBackButton'
+
 interface ProductPageProps {
   params: Promise<{ 
     id: string
@@ -21,13 +23,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
     return (
       <div className="container mx-auto px-4 py-8">
-
-        <Button asChild variant="outline" className="mb-6">
-          <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Назад к каталогу
-          </Link>
-        </Button>
+        
+        <ProductBackButton/>
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Изображения товара */}

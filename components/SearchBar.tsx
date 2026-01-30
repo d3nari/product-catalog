@@ -3,33 +3,45 @@
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState } from "react"
 import { useDebounce } from "@/hooks/use-debounce"
 
 export default function SearchBar() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [searchValue, setSearchValue] = useState(searchParams.get('q') || '')
+  
+  // Берем начальное значение из URL
+  const initialSearch = searchParams.get('q') || ''
+  const [searchValue, setSearchValue] = useState(initialSearch)
   const debouncedSearch = useDebounce(searchValue, 500)
 
-  const updateSearchQuery = useCallback((query: string) => {
+  // Эффект для обновления URL при изменении debouncedSearch
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     
-    if (query.trim()) {
-      params.set('q', query.trim())
+    if (debouncedSearch.trim()) {
+      params.set('q', debouncedSearch.trim())
     } else {
       params.delete('q')
     }
     
-    params.delete('page') 
-    params.delete('category') 
+    params.delete('page')
+    params.delete('category')
     
-    router.push(`/?${params.toString()}`)
-  }, [router])
+    // Проверяем, нужно ли вообще обновлять URL
+    const currentQuery = searchParams.get('q') || ''
+    if (debouncedSearch.trim() !== currentQuery.trim()) {
+      router.push(`/?${params.toString()}`)
+    }
+  }, [debouncedSearch, router]) // ← убрали searchParams из зависимостей!
 
+  // Эффект для синхронизации при изменении URL (только при монтировании и изменении searchParams)
   useEffect(() => {
-    updateSearchQuery(debouncedSearch)
-  }, [debouncedSearch, updateSearchQuery])
+    const currentSearch = searchParams.get('q') || ''
+    if (currentSearch !== searchValue) {
+      setSearchValue(currentSearch)
+    }
+  }, [searchParams]) // ← только когда searchParams реально меняется
 
   return (
     <div className="relative w-full max-w-md">
