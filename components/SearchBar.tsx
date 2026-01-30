@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { useDebounce } from "@/hooks/use-debounce"
+import { useDebounce } from "@/hooks/useDebounce"
 
 export default function SearchBar() {
   const router = useRouter()
