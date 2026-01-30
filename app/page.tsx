@@ -1,5 +1,5 @@
 import { use } from 'react'
-import ProductList from '@/components/product-list'
+import ProductList from '@/components/ProductList'
 
 export default async function Home({
   searchParams,

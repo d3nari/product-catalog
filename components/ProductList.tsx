@@ -1,10 +1,10 @@
 import { Suspense } from 'react'
-import ProductGrid from './product-grid'
-import SearchBar from './search-bar'
+import ProductGrid from './ProductGrid'
+import SearchBar from './SearchBar'
 import { getProducts, getCategories } from '@/lib/api'
 import LoadingSpinner from './loading-spinner'
 import Pagination from './pagination'
-import CategoryFilter from './category-filter'
+import CategoryFilter from './CategoryFilter'
 
 interface ProductListProps {
   searchParams?: {
