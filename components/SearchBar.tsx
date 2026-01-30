@@ -10,12 +10,10 @@ export default function SearchBar() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
-  // Берем начальное значение из URL
   const initialSearch = searchParams.get('q') || ''
   const [searchValue, setSearchValue] = useState(initialSearch)
   const debouncedSearch = useDebounce(searchValue, 500)
 
-  // Эффект для обновления URL при изменении debouncedSearch
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     
@@ -28,20 +26,18 @@ export default function SearchBar() {
     params.delete('page')
     params.delete('category')
     
-    // Проверяем, нужно ли вообще обновлять URL
     const currentQuery = searchParams.get('q') || ''
     if (debouncedSearch.trim() !== currentQuery.trim()) {
       router.push(`/?${params.toString()}`)
     }
-  }, [debouncedSearch, router]) // ← убрали searchParams из зависимостей!
+  }, [debouncedSearch, router]) 
 
-  // Эффект для синхронизации при изменении URL (только при монтировании и изменении searchParams)
   useEffect(() => {
     const currentSearch = searchParams.get('q') || ''
     if (currentSearch !== searchValue) {
       setSearchValue(currentSearch)
     }
-  }, [searchParams]) // ← только когда searchParams реально меняется
+  }, [searchParams]) 
 
   return (
     <div className="relative w-full max-w-md">
